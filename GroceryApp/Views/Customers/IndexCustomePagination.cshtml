@@ -1,0 +1,245 @@
+﻿@model PaginatedList<CustomerForListViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (TempData["Message"] != null && TempData["Message"].ToString().Length > 0)
+{
+    <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>@TempData["Message"].ToString()</strong>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-10 offset-md-1 mt-3 mb-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <a id="customerEdit" asp-action="AddEditCustomer" class="btn btn-primary">
+                    <i class="glyphicon glyphicon-pencil"></i>  Add Customer
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-10 offset-md-1 mt-3 mb-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form class="form-inline" asp-action="IndexCustomePagination" method="get">
+                    <div class="form-group mr-1">
+                        <label for="firstName" class="sr-only">First Name</label>
+                        <input name="firstName" id="firstName" class="form-control" placeholder="First Name" value="@ViewData["FirstNameFilter"]" />
+                    </div>
+                    <div class="form-group mr-1">
+                        <label for="lastName" class="sr-only">Last Name</label>
+                        <input name="lastName" id="lastName" class="form-control" placeholder="Last Name" value="@ViewData["LastNameFilter"]" />
+                    </div>
+                    <div class="form-group mr-1">
+                        <label for="fullName" class="sr-only">Last Name</label>
+                        <input name="fullName" id="fullName" class="form-control" placeholder="Full Name" value="@ViewData["FullNameFilter"]" />
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile" class="sr-only">Mobile</label>
+                        <input name="mobile" id="mobile" class="form-control" placeholder="Mobile" value="@ViewData["MobileFilter"]" />
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success ml-2 mr-2" name="submit" value="search" autofocus>Search</button>
+                        <button type="submit" class="btn btn btn-dark" name="submit" value="clear">Clear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <table class="table table-bordered table-hover table-responsive-md">
+            <thead>
+                <tr>
+                    <th>
+                        <a asp-action="IndexCustomePagination"
+                           asp-route-sortOrder="@ViewData["FirstNameSortParm"]"
+                           asp-route-firstName="@ViewData["FirstNameFilter"]"
+                           asp-route-lastName="@ViewData["LastNameFilter"]"
+                           asp-route-fullName="@ViewData["FullNameFilter"]"
+                           asp-route-mobile="@ViewData["MobileFilter"]"
+                           asp-route-pageNumber="@ViewData["CurrentPageNumber"]">
+                            First Name
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="IndexCustomePagination"
+                           asp-route-sortOrder="@ViewData["LastNameSortParm"]"
+                           asp-route-firstName="@ViewData["FirstNameFilter"]"
+                           asp-route-lastName="@ViewData["LastNameFilter"]"
+                           asp-route-fullName="@ViewData["FullNameFilter"]"
+                           asp-route-mobile="@ViewData["MobileFilter"]"
+                           asp-route-pageNumber="@ViewData["CurrentPageNumber"]">
+                            Last Name
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="IndexCustomePagination"
+                           asp-route-sortOrder="@ViewData["FullNameSortParm"]"
+                           asp-route-firstName="@ViewData["FirstNameFilter"]"
+                           asp-route-lastName="@ViewData["LastNameFilter"]"
+                           asp-route-fullName="@ViewData["FullNameFilter"]"
+                           asp-route-mobile="@ViewData["MobileFilter"]"
+                           asp-route-pageNumber="@ViewData["CurrentPageNumber"]">
+                            Full Name
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="IndexCustomePagination"
+                           asp-route-sortOrder="@ViewData["MobileSortParm"]"
+                           asp-route-firstName="@ViewData["FirstNameFilter"]"
+                           asp-route-lastName="@ViewData["LastNameFilter"]"
+                           asp-route-fullName="@ViewData["FullNameFilter"]"
+                           asp-route-mobile="@ViewData["MobileFilter"]"
+                           asp-route-pageNumber="@ViewData["CurrentPageNumber"]">
+                            Mobile
+                        </a>
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Mobile)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @if (item.IsActive)
+                            {
+                                <span>Active</span>
+                            }
+                            else
+                            {
+                                <span>Inactive</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <form method="post" asp-action="DeleteCustomer" asp-route-id="@item.CustomerId">
+                                    <a id="customerEdit" asp-action="AddEditCustomer" asp-route-id="@item.CustomerId" class="btn btn-info">
+                                        <i class="glyphicon glyphicon-pencil"></i>  Edit
+                                    </a>
+                                    <span id="confirmDeleteSpan_@item.CustomerId" style="display:none">
+                                        <span>Are you sure you want to delete?</span>
+                                        <button type="submit" class="btn btn-danger">Yes</button>
+                                        <button type="button" class="btn btn-primary" onclick="confirmDelete('@item.CustomerId', false)">No</button>
+                                    </span>
+                                    <span id="deleteSpan_@item.CustomerId">
+                                        <button type="button" class="btn btn-danger" onclick="confirmDelete('@item.CustomerId', true)">Delete</button>
+                                    </span>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @{
+            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+        }
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="row">
+            <div class="col-md-11">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a asp-action="IndexCustomePagination"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-pageNumber="@(Model.PageIndex - 1)"
+                               asp-route-firstName="@ViewData["FirstNameFilter"]"
+                               asp-route-lastName="@ViewData["LastNameFilter"]"
+                               asp-route-fullName="@ViewData["FullNameFilter"]"
+                               asp-route-mobile="@ViewData["MobileFilter"]"
+                               class="btn btn-primary @prevDisabled">
+                                Previous
+                            </a>
+                        </li>
+                        @{
+                            var startIndex = Math.Max(Convert.ToByte(ViewData["CurrentPageNumber"]) - 2, 1);
+                            var endIndex = Math.Min(Convert.ToByte(ViewData["CurrentPageNumber"]) + 2, Model.TotalPages);
+                        }
+                        @for (var i = startIndex; i <= endIndex; i++)
+                        {
+                            <li class="page-item">
+                                <a asp-action="IndexCustomePagination"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-pageNumber="@(i)"
+                                   asp-route-firstName="@ViewData["FirstNameFilter"]"
+                                   asp-route-lastName="@ViewData["LastNameFilter"]"
+                                   asp-route-fullName="@ViewData["FullNameFilter"]"
+                                   asp-route-mobile="@ViewData["MobileFilter"]"
+                                   class="page-link">
+                                    @i
+                                </a>
+                            </li>
+                        }
+                        <li class="page-item">
+                            <a asp-action="IndexCustomePagination"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-pageNumber="@(Model.PageIndex + 1)"
+                               asp-route-firstName="@ViewData["FirstNameFilter"]"
+                               asp-route-lastName="@ViewData["LastNameFilter"]"
+                               asp-route-fullName="@ViewData["FullNameFilter"]"
+                               asp-route-mobile="@ViewData["MobileFilter"]"
+                               class="btn btn-primary @nextDisabled">
+                                Next
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-1">
+                <form class="form-inline" asp-action="IndexCustomePagination" method="get">
+                    <div class="form-group">
+                        <select id="pageSize" name="pageSize" class="custom-select">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/customer-index.js"></script>
+    <script src="~/js/delete-confirmation.js"></script>
+}
+

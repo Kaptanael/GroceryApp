@@ -1,0 +1,66 @@
+﻿@model GroceryApp.ViewModels.TransactionForCreateUpdateViewModel
+
+@{
+    ViewData["Title"] = "Add Edit Transaction";
+}
+
+@if (TempData["Message"] != null && TempData["Message"].ToString().Length > 0)
+{
+    <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>@TempData["Message"].ToString()</strong>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3 mt-3">
+        <div class="card">
+            <div class="card-header">Transaction</div>
+            <div class="card-body primary">
+                <form asp-action="AddEditTransaction">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="CustomerTransactionId" />
+                    <input type="hidden" asp-for="TransactionType" />
+                    <div class="form-group">
+                        <label asp-for="Amount" class="control-label"></label>
+                        <input asp-for="Amount" class="form-control" min="0" autofocus />
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <textarea asp-for="Description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="TransactionDate" class="control-label"></label>
+                        <input asp-for="TransactionDate" class="form-control" />
+                        <span asp-validation-for="TransactionDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CustomerId" class="control-label"></label>
+                        <select asp-for="CustomerId" asp-items="@Model.CustomerSelectList" class="form-control">
+                            <option value="">----Select----</option>
+                        </select>
+                        <span asp-validation-for="CustomerId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group text-center">
+                        <a id="back" asp-action="Index" class="btn btn-default">
+                            <i class="glyphicon glyphicon-pencil"></i>  Back
+                        </a>
+                        <input type="submit" value="Save" name="save" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/addedit-receive.js"></script>
+}
+
+
+
+

@@ -1,0 +1,178 @@
+﻿@model CustomerTransactionSummaryForSearchViewModel
+
+@{
+    ViewData["Title"] = "Customer Transactions";
+}
+
+<div class="row">
+    <div class="col-md-10 offset-md-1 mt-3 mb-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form class="form-inline" asp-controller="Home" asp-action="Index" method="get">
+                    <div class="form-group mr-1">
+                        <label for="fullName" class="sr-only">Full Name</label>
+                        <input name="fullName" id="fullName" class="form-control" placeholder="Full Name" value="@Model.FullNameFilter" />
+                    </div>
+                    <div class="form-group mr-1">
+                        <label for="mobile" class="sr-only">Mobile</label>
+                        <input name="mobile" id="mobile" class="form-control" placeholder="Mobile" value="@Model.MobileFilter" />
+                    </div>
+                    <div class="form-group mr-1">
+                        <label for="fromDate" class="sr-only">From Date</label>
+                        <input type="date" name="fromDate" id="fromDate" class="form-control" placeholder="From Date" value="@Model.FromDateFilter" />
+                    </div>
+                    <div class="form-group">
+                        <label for="toDate" class="sr-only">To Date</label>
+                        <input type="date" name="toDate" class="form-control" placeholder="To Date" value="@Model.ToDateFilter" />
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success ml-2 mr-2" name="submit" value="search" autofocus>Search</button>
+                        <button type="submit" class="btn btn-dark" name="submit" value="clear">Clear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-10 offset-md-1 mt-3">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@Model.FullNameSortParm"
+                           asp-route-fullName="@Model.FullNameFilter"
+                           asp-route-mobile="@Model.MobileFilter"
+                           asp-route-fromDate="@Model.FromDateFilter"
+                           asp-route-toDate="@Model.ToDateFilter"
+                           asp-route-pageNumber="@Model.CurrentPageNumber">
+                            Full Name
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@Model.MobileSortParm"
+                           asp-route-fullName="@Model.FullNameFilter"
+                           asp-route-mobile="@Model.MobileFilter"
+                           asp-route-fromDate="@Model.FromDateFilter"
+                           asp-route-toDate="@Model.ToDateFilter"
+                           asp-route-pageNumber="@Model.CurrentPageNumber">
+                            Mobile
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@Model.SoldSortParm"
+                           asp-route-fullName="@Model.FullNameFilter"
+                           asp-route-mobile="@Model.MobileFilter"
+                           asp-route-fromDate="@Model.FromDateFilter"
+                           asp-route-toDate="@Model.ToDateFilter"
+                           asp-route-pageNumber="@Model.CurrentPageNumber">
+                            Total Sold Amount
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@Model.ReceivedSortParm"
+                           asp-route-fullName="@Model.FullNameFilter"
+                           asp-route-mobile="@Model.MobileFilter"
+                           asp-route-fromDate="@Model.FromDateFilter"
+                           asp-route-toDate="@Model.ToDateFilter"
+                           asp-route-pageNumber="@Model.CurrentPageNumber">
+                            Total Received Amount
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@Model.TotalSortParm"
+                           asp-route-fullName="@Model.FullNameFilter"
+                           asp-route-mobile="@Model.MobileFilter"
+                           asp-route-fromDate="@Model.FromDateFilter"
+                           asp-route-toDate="@Model.ToDateFilter"
+                           asp-route-pageNumber="@Model.CurrentPageNumber">
+                            Total Amount
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CustomerTransaction)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Mobile)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalSellAmount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalReceiveAmount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalAmount)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @{
+            var prevDisabled = !Model.CustomerTransaction.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.CustomerTransaction.HasNextPage ? "disabled" : "";
+        }
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@Model.CurrentSortOrder"
+                       asp-route-pageNumber="@(Model.CustomerTransaction.PageIndex - 1)"
+                       asp-route-fullName="@Model.FullNameFilter"
+                       asp-route-mobile="@Model.MobileFilter"
+                       asp-route-fromDate="@Model.FromDateFilter"
+                       asp-route-toDate="@Model.ToDateFilter"
+                       class="btn btn-primary @prevDisabled">
+                        Previous
+                    </a>
+                </li>
+                @*
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>*@
+                <li class="page-item">
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@Model.CurrentSortOrder"
+                       asp-route-pageNumber="@(Model.CustomerTransaction.PageIndex + 1)"
+                       asp-route-fullName="@Model.FullNameFilter"
+                       asp-route-mobile="@Model.MobileFilter"
+                       asp-route-fromDate="@Model.FromDateFilter"
+                       asp-route-toDate="@Model.ToDateFilter"
+                       class="btn btn-primary @nextDisabled">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        @*<cs-pager cs-paging-pagenumber="Model.PageNumber"
+                        cs-paging-totalitems="Model.TotalItems"
+                        cs-paging-pagesize="Model.PageSize"
+                        cs-pagenumber-param="pageNumber"
+                        asp-controller="Home"
+                        asp-action="Index"
+                        cs-pager-li-current-class="page-item active"
+                        cs-pager-li-other-class="page-item"
+                        cs-pager-li-non-active-class="page-item disabled"
+                        cs-pager-link-current-class="page-link"
+                        cs-pager-link-other-class="page-link">
+            </cs-pager>*@
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/delete-confirmation.js"></script>
+    <script src="~/js/home-index.js"></script>
+}

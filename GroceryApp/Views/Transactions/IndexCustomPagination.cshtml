@@ -1,0 +1,219 @@
+﻿@model CustomerTransactionForSearchViewModel
+
+@{
+    ViewData["Title"] = "Customer Transactions";
+}
+
+<div class="row">
+    <div class="col-md-10 offset-md-1 mt-3 mb-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form class="form-inline" asp-controller="Transactions" asp-action="Index" method="get">
+                    <div class="form-group mr-1">
+                        <label for="firstName" class="sr-only">First Name</label>
+                        <input name="firstName" id="firstName" class="form-control" placeholder="First Name" value="@Model.FirstNameFilter" />
+                    </div>
+                    <div class="form-group mr-1">
+                        <label for="lastName" class="sr-only">Last Name</label>
+                        <input name="lastName" id="lastName" class="form-control" placeholder="Last Name" value="@Model.LastNameFilter" />
+                    </div>
+                    <div class="form-group mr-1">
+                        <label for="fullName" class="sr-only">Full Name</label>
+                        <input name="fullName" id="fullName" class="form-control" placeholder="Full Name" value="@Model.FullNameFilter" />
+                    </div>
+                    <div class="form-group mr-1">
+                        <label for="mobile" class="sr-only">Mobile</label>
+                        <input name="mobile" id="mobile" class="form-control" placeholder="Mobile" value="@Model.MobileFilter" />
+                    </div>
+                    <div class="form-group mr-1">
+                        <label for="fromDate" class="sr-only">From Date</label>
+                        <input type="date" name="fromDate" id="fromDate" class="form-control" placeholder="From Date" value="@Model.FromDateFilter" />
+                    </div>
+                    <div class="form-group">
+                        <label for="toDate" class="sr-only">To Date</label>
+                        <input type="date" name="toDate" class="form-control" placeholder="To Date" value="@Model.ToDateFilter" />
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success ml-2 mr-2" name="submit" value="search" autofocus>Search</button>
+                        <button type="submit" class="btn btn-dark" name="submit" value="clear">Clear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-10 offset-md-1 mt-3">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@Model.FirstNameSortParm"
+                           asp-route-firstName="@Model.FirstNameFilter"
+                           asp-route-lastName="@Model.LastNameFilter"
+                           asp-route-fullName="@Model.FullNameFilter"
+                           asp-route-mobile="@Model.MobileFilter"
+                           asp-route-fromDate="@Model.FromDateFilter"
+                           asp-route-toDate="@Model.ToDateFilter"
+                           asp-route-pageNumber="@Model.CurrentPageNumber">
+                            First Name
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@Model.LastNameSortParm"
+                           asp-route-firstName="@Model.FirstNameFilter"
+                           asp-route-lastName="@Model.LastNameFilter"
+                           asp-route-fullName="@Model.FullNameFilter"
+                           asp-route-mobile="@Model.MobileFilter"
+                           asp-route-fromDate="@Model.FromDateFilter"
+                           asp-route-toDate="@Model.ToDateFilter"
+                           asp-route-pageNumber="@Model.CurrentPageNumber">
+                            Last Name
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@Model.FullNameSortParm"
+                           asp-route-firstName="@Model.FirstNameFilter"
+                           asp-route-lastName="@Model.LastNameFilter"
+                           asp-route-fullName="@Model.FullNameFilter"
+                           asp-route-mobile="@Model.MobileFilter"
+                           asp-route-fromDate="@Model.FromDateFilter"
+                           asp-route-toDate="@Model.ToDateFilter"
+                           asp-route-pageNumber="@Model.CurrentPageNumber">
+                            Full Name
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@Model.MobileSortParm"
+                           asp-route-firstName="@Model.FirstNameFilter"
+                           asp-route-lastName="@Model.LastNameFilter"
+                           asp-route-fullName="@Model.FullNameFilter"
+                           asp-route-mobile="@Model.MobileFilter"
+                           asp-route-fromDate="@Model.FromDateFilter"
+                           asp-route-toDate="@Model.ToDateFilter"
+                           asp-route-pageNumber="@Model.CurrentPageNumber">
+                            Mobile
+                        </a>
+                    </th>
+                    <th>
+                        Sold Amount
+                    </th>
+                    <th>
+                        Received Amount
+                    </th>
+                    <th>
+                        <a asp-action="Index"
+                           asp-route-sortOrder="@Model.DateSortParm"
+                           asp-route-firstName="@Model.FirstNameFilter"
+                           asp-route-lastName="@Model.LastNameFilter"
+                           asp-route-fullName="@Model.FullNameFilter"
+                           asp-route-mobile="@Model.MobileFilter"
+                           asp-route-fromDate="@Model.FromDateFilter"
+                           asp-route-toDate="@Model.ToDateFilter"
+                           asp-route-pageNumber="@Model.CurrentPageNumber">
+                            Date
+                        </a>
+                    </th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CustomerTransaction)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mobile)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SoldAmount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReceivedAmount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TransactionDate)
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <form method="post" asp-action="DeleteTransaction" asp-route-id="@item.TransactionId">
+                                <a id="transactionEdit" asp-action="AddEditTransaction" asp-route-id="@item.TransactionId" class="btn btn-info">
+                                    <i class="glyphicon glyphicon-pencil"></i>  Edit
+                                </a>
+                                <span id="confirmDeleteSpan_@item.TransactionId" style="display:none">
+                                    <span>Are you sure you want to delete?</span>
+                                    <button type="submit" class="btn btn-danger">Yes</button>
+                                    <a href="#" class="btn btn-primary" onclick="confirmDelete('@item.TransactionId', false)">No</a>
+                                </span>
+                                <span id="deleteSpan_@item.TransactionId">
+                                    <a href="#" class="btn btn-danger"
+                                       onclick="confirmDelete('@item.TransactionId', true)">Delete</a>
+                                </span>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        @{
+            var prevDisabled = !Model.CustomerTransaction.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.CustomerTransaction.HasNextPage ? "disabled" : "";
+        }
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@Model.CurrentSortOrder"
+                       asp-route-pageNumber="@(Model.CustomerTransaction.PageIndex - 1)"
+                       asp-route-firstName="@Model.FirstNameFilter"
+                       asp-route-lastName="@Model.LastNameFilter"
+                       asp-route-fullName="@Model.FullNameFilter"
+                       asp-route-mobile="@Model.MobileFilter"
+                       asp-route-fromDate="@Model.FromDateFilter"
+                       asp-route-toDate="@Model.ToDateFilter"
+                       class="btn btn-primary @prevDisabled">
+                        Previous
+                    </a>
+                </li>
+                @*
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>*@
+                <li class="page-item">
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@Model.CurrentSortOrder"
+                       asp-route-pageNumber="@(Model.CustomerTransaction.PageIndex + 1)"
+                       asp-route-firstName="@Model.FirstNameFilter"
+                       asp-route-lastName="@Model.LastNameFilter"
+                       asp-route-fullName="@Model.FullNameFilter"
+                       asp-route-mobile="@Model.MobileFilter"
+                       asp-route-fromDate="@Model.FromDateFilter"
+                       asp-route-toDate="@Model.ToDateFilter"
+                       class="btn btn-primary @nextDisabled">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>       
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/transaction-index.js"></script>
+    <script src="~/js/delete-confirmation.js"></script>
+}

@@ -2,7 +2,13 @@
 
     setTimeout(function () {
         $("#successMessageDiv").remove();
-    }, 3000);
+    }, 3000);  
+
+    var fullName = getParameterByName('fullName'); 
+
+    if (fullName !== null){
+        $('#fullName').val(fullName);
+    }
 
     loadFullNameAutocomplete();
 
@@ -25,7 +31,7 @@
         lengthMenu: [5, 10, 15, 20],
         dom: '<"top"i>rt<"bottom"lp><"clear">',
         ajax: {
-            url: "/Transactions/GetAllTransactionByFilter",
+            url: "/Transactions/GetAllTransactionByFilter?" + $.param({ fullName: fullName }),
             type: "POST",
             datatype: "json",
             async: true
@@ -38,7 +44,7 @@
             { data: 'fullName', name: 'FullName', orderable: true },
             { data: 'mobile', name: 'Mobile', orderable: true },
             { data: 'soldAmount', name: 'SoldAmount', orderable: true },
-            { data: 'receivedAmount', name: 'ReceivedAmount', orderable: true },            
+            { data: 'receivedAmount', name: 'ReceivedAmount', orderable: true },
             {
                 data: 'transactionDate', name: 'TransactionDate', orderable: true,
                 render: function (value) {
@@ -50,7 +56,7 @@
                 data: null,
                 orderable: false,
                 autoWidth: true,
-                render: function (data, type, row) {                    
+                render: function (data, type, row) {
                     if (row.status === true) {
                         return '<div>'
                             + '<a href="/Transactions/AddEditTransaction/' + row.transactionId + '" class="btn btn-primary btn-sm mr-1">'
@@ -104,7 +110,7 @@
             $("#deleteMessage").html(generateMessage('danger'));
             $("#message").html('To date should be greater than From date');
         }
-    });
+    });    
 });
 
 function deleteTransaction(transactionId) {
@@ -272,4 +278,13 @@ function loadMobileAutocomplete() {
             return false;
         }
     });
+}
+
+function getParameterByName(name, url = window.location.href) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }

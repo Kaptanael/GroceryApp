@@ -20,7 +20,7 @@ namespace GroceryApp.Controllers
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        private readonly ILogger<TransactionsController> _logger;
+        private readonly ILogger<TransactionsController> _logger;        
 
         public TransactionsController(IUnitOfWork uow, IMapper mapper, ILogger<TransactionsController> logger)
         {
@@ -37,12 +37,12 @@ namespace GroceryApp.Controllers
 
         [HttpGet]
         public IActionResult TransactionSummary()
-        {
+        {            
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetAllTransactionByFilter(DtParameters dtParameters)
+        public async Task<IActionResult> GetAllTransactionByFilter(DtParameters dtParameters,string fullName)
         {
             var sortColumnName = "TransactionId";
             var orderAscendingDirection = true;
@@ -55,7 +55,10 @@ namespace GroceryApp.Controllers
 
             var firstName = Request.Form["columns[1][search][value]"].FirstOrDefault();
             var lastName = Request.Form["columns[2][search][value]"].FirstOrDefault();
-            var fullName = Request.Form["columns[3][search][value]"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(Request.Form["columns[3][search][value]"].FirstOrDefault()))
+            {
+                fullName = Request.Form["columns[3][search][value]"].FirstOrDefault();
+            }            
             var mobile = Request.Form["columns[4][search][value]"].FirstOrDefault();
             var fromDate = Request.Form["columns[5][search][value]"].FirstOrDefault();
             var toDate = Request.Form["columns[6][search][value]"].FirstOrDefault();

@@ -35,6 +35,9 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Transactions" asp-action="Index">Transactions</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Transactions" asp-action="TransactionSummary">Transactions Summary</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Customers" asp-action="Index">Customers</a>
                         </li>
                         <li class="nav-item">
@@ -72,7 +75,7 @@
             &copy; 2020 - Grocery Application - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
@@ -80,6 +83,7 @@
     <script src="~/lib/summernote/summernote.js"></script>
     <script src="~/lib/moment/moment.min.js"></script>
     <script src="~/lib/notify/notify.min.js"></script>
+    <script src="~/lib/Chart/Chart.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>

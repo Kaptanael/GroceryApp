@@ -35,6 +35,12 @@ namespace GroceryApp.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult TransactionSummary()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> GetAllTransactionByFilter(DtParameters dtParameters)
         {
@@ -57,12 +63,19 @@ namespace GroceryApp.Controllers
             DateTime? vFromDate = null;
             DateTime? vToDate = null;
 
-            if (!string.IsNullOrEmpty(fromDate))
+            if (!string.IsNullOrEmpty(fromDate) && string.IsNullOrEmpty(toDate))
             {
                 vFromDate = Convert.ToDateTime(fromDate).AddHours(00).AddMinutes(00).AddSeconds(00);
+                vToDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
             }
-            if (!string.IsNullOrEmpty(toDate))
+            else if (string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
             {
+                vFromDate = new DateTime(DateTime.Now.Year, 01, 01, 00, 00, 00);
+                vToDate = Convert.ToDateTime(toDate).AddHours(23).AddMinutes(59).AddSeconds(59);
+            }
+            else if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            {
+                vFromDate = Convert.ToDateTime(fromDate).AddHours(00).AddMinutes(00).AddSeconds(00);
                 vToDate = Convert.ToDateTime(toDate).AddHours(23).AddMinutes(59).AddSeconds(59);
             }
 
@@ -70,6 +83,55 @@ namespace GroceryApp.Controllers
             var customerTransactionsModel = _mapper.Map<List<CustomerTransactionForListViewModel>>(customerTransactionsResult.Data);
 
             return Json(new DtResult<CustomerTransactionForListViewModel>
+            {
+                Data = customerTransactionsModel,
+                Draw = dtParameters.Draw,
+                RecordsFiltered = customerTransactionsResult.TotalFilteredCount,
+                RecordsTotal = customerTransactionsResult.TotalCount
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetAllTransactionSummaryByFilter(DtParameters dtParameters)
+        {
+            var sortColumnName = "CustomerId";
+            var orderAscendingDirection = true;
+
+            if (dtParameters.Order != null)
+            {
+                sortColumnName = dtParameters.Columns[dtParameters.Order[0].Column].Data;
+                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
+            }
+
+            var fullName = Request.Form["columns[1][search][value]"].FirstOrDefault();
+            var mobile = Request.Form["columns[2][search][value]"].FirstOrDefault();
+            var email = Request.Form["columns[3][search][value]"].FirstOrDefault();
+            var fromDate = Request.Form["columns[4][search][value]"].FirstOrDefault();
+            var toDate = Request.Form["columns[5][search][value]"].FirstOrDefault();
+
+            DateTime? vFromDate = null;
+            DateTime? vToDate = null;
+
+            if (!string.IsNullOrEmpty(fromDate) && string.IsNullOrEmpty(toDate))
+            {
+                vFromDate = Convert.ToDateTime(fromDate).AddHours(00).AddMinutes(00).AddSeconds(00);
+                vToDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
+            }
+            else if (string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            {
+                vFromDate = new DateTime(DateTime.Now.Year, 01, 01, 00, 00, 00);
+                vToDate = Convert.ToDateTime(toDate).AddHours(23).AddMinutes(59).AddSeconds(59);
+            }
+            else if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            {
+                vFromDate = Convert.ToDateTime(fromDate).AddHours(00).AddMinutes(00).AddSeconds(00);
+                vToDate = Convert.ToDateTime(toDate).AddHours(23).AddMinutes(59).AddSeconds(59);
+            }
+
+            var customerTransactionsResult = await _uow.CustomerTransactions.GetAllCustomerTransactionSummaryAsync(dtParameters.Start, dtParameters.Length, sortColumnName, orderAscendingDirection, fullName, mobile, email, vFromDate, vToDate);
+            var customerTransactionsModel = _mapper.Map<List<CustomerTransactionSummaryForListViewModel>>(customerTransactionsResult.Data);
+
+            return Json(new DtResult<CustomerTransactionSummaryForListViewModel>
             {
                 Data = customerTransactionsModel,
                 Draw = dtParameters.Draw,
@@ -290,16 +352,16 @@ namespace GroceryApp.Controllers
                 if (transactionFromRepo == null)
                 {
                     return NotFound();
-                }                
+                }
 
                 transactionForCreateUpdateViewModel = _mapper.Map<TransactionForCreateUpdateViewModel>(transactionFromRepo);
-                
+
                 if (transactionFromRepo.SoldAmount > 0)
                 {
                     transactionForCreateUpdateViewModel.Amount = transactionFromRepo.SoldAmount;
                     transactionForCreateUpdateViewModel.TransactionType = 1;
                 }
-                else if(transactionFromRepo.ReceivedAmount > 0)
+                else if (transactionFromRepo.ReceivedAmount > 0)
                 {
                     transactionForCreateUpdateViewModel.Amount = transactionFromRepo.ReceivedAmount;
                     transactionForCreateUpdateViewModel.TransactionType = 2;
@@ -344,7 +406,7 @@ namespace GroceryApp.Controllers
                         {
                             transactionToUpdate.SoldAmount = transactionForCreateUpdateViewModel.Amount;
                         }
-                        else if (transactionForCreateUpdateViewModel.TransactionType == 2) 
+                        else if (transactionForCreateUpdateViewModel.TransactionType == 2)
                         {
                             transactionToUpdate.ReceivedAmount = transactionForCreateUpdateViewModel.Amount;
                         }
@@ -436,6 +498,12 @@ namespace GroceryApp.Controllers
         public async Task<JsonResult> GetAllCustomerByMobile(string term)
         {
             var customerNamesFromRepo = await _uow.Customers.GetAllCustomerByMobileAsync(term);
+            return Json(customerNamesFromRepo);
+        }
+
+        public async Task<JsonResult> GetAllCustomerByEmail(string term)
+        {
+            var customerNamesFromRepo = await _uow.Customers.GetAllCustomerByEmailAsync(term);
             return Json(customerNamesFromRepo);
         }
     }

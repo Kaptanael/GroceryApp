@@ -34,130 +34,30 @@ namespace GroceryApp.Controllers
         public IActionResult Index()
         {
             return View();
-        }
+        }        
 
-        [HttpPost]
-        public async Task<IActionResult> GetAllTransactionSummaryByFilter(DtParameters dtParameters)
+        [HttpGet]
+        public async Task<IActionResult> GetCurrentYearSaleSummaryByMonth()
         {
-            var sortColumnName = "CustomerId";
-            var orderAscendingDirection = true;
+            var customerTransactionsFromRepo = await _uow.CustomerTransactions.GetCurrentYearSaleSummaryByMonthAsync();
+            var customerTransactionsToReturn = _mapper.Map<List<CustomerTransactionSummaryForListViewModel>>(customerTransactionsFromRepo);
 
-            if (dtParameters.Order != null)
+            return Json(new
             {
-                sortColumnName = dtParameters.Columns[dtParameters.Order[0].Column].Data;
-                orderAscendingDirection = dtParameters.Order[0].Dir.ToString().ToLower() == "asc";
-            }
-            
-            var fullName = Request.Form["columns[1][search][value]"].FirstOrDefault();
-            var mobile = Request.Form["columns[2][search][value]"].FirstOrDefault();
-            var fromDate = Request.Form["columns[3][search][value]"].FirstOrDefault();
-            var toDate = Request.Form["columns[4][search][value]"].FirstOrDefault();
-
-            DateTime? vFromDate = null;
-            DateTime? vToDate = null;
-
-            if (!string.IsNullOrEmpty(fromDate))
-            {
-                vFromDate = Convert.ToDateTime(fromDate).AddHours(00).AddMinutes(00).AddSeconds(00);
-            }
-            if (!string.IsNullOrEmpty(toDate))
-            {
-                vToDate = Convert.ToDateTime(toDate).AddHours(23).AddMinutes(59).AddSeconds(59);
-            }
-
-            var customerTransactionsResult = await _uow.CustomerTransactions.GetAllCustomerTransactionSummaryAsync(dtParameters.Start, dtParameters.Length, sortColumnName, orderAscendingDirection, fullName, mobile, vFromDate, vToDate);
-            var customerTransactionsModel = _mapper.Map<List<CustomerTransactionSummaryForListViewModel>>(customerTransactionsResult.Data);
-
-            return Json(new DtResult<CustomerTransactionSummaryForListViewModel>
-            {
-                Data = customerTransactionsModel,
-                Draw = dtParameters.Draw,
-                RecordsFiltered = customerTransactionsResult.TotalFilteredCount,
-                RecordsTotal = customerTransactionsResult.TotalCount
+                SellAmount = customerTransactionsToReturn.Select(c => c.TotalSellAmount)                
             });
         }
 
-        //public async Task<IActionResult> Index(int? pageNumber, int pageSize, string sortOrder, string fullName, string mobile, DateTime? fromDate, DateTime? toDate, string submit)
-        //{
-        //    var transactionSummaryForSearchVM = new CustomerTransactionSummaryForSearchViewModel();
-
-        //    if (!string.IsNullOrEmpty(submit) && submit == "clear")
-        //    {
-        //        transactionSummaryForSearchVM.FullNameFilter = string.Empty;
-        //        transactionSummaryForSearchVM.MobileFilter = string.Empty;
-        //        transactionSummaryForSearchVM.FromDateFilter = null;
-        //        transactionSummaryForSearchVM.ToDateFilter = null;
-        //        //transactionForSearchVM.FromDateFilter = DateTime.Now.AddHours(00).AddMinutes(00).AddSeconds(00);
-        //        //transactionForSearchVM.ToDateFilter = DateTime.Now.AddHours(23).AddMinutes(59).AddSeconds(59);
-        //    }
-        //    else
-        //    {
-        //        transactionSummaryForSearchVM.FullNameFilter = fullName;
-        //        transactionSummaryForSearchVM.MobileFilter = mobile;
-
-        //        DateTime? vFromDate = null;
-        //        DateTime? vToDate = null;
-
-        //        if (fromDate != null && fromDate.HasValue)
-        //        {
-        //            vFromDate = fromDate.Value.AddHours(00).AddMinutes(00).AddSeconds(00);
-        //            transactionSummaryForSearchVM.FromDateFilter = vFromDate.Value.Date;
-        //        }
-        //        if (toDate != null && toDate.HasValue)
-        //        {
-        //            vToDate = toDate.Value.AddHours(23).AddMinutes(59).AddSeconds(59);
-        //            transactionSummaryForSearchVM.ToDateFilter = vToDate.Value.Date;
-        //        }
-        //    }
-
-        //    transactionSummaryForSearchVM.SortOrder = sortOrder;
-        //    transactionSummaryForSearchVM.CurrentSortOrder = sortOrder;
-        //    transactionSummaryForSearchVM.PageNumber = pageNumber;
-        //    transactionSummaryForSearchVM.CurrentPageNumber = pageNumber;
-
-        //    transactionSummaryForSearchVM.FullNameSortParm = sortOrder == "FullName" ? "fullname_desc" : "FullName";
-        //    transactionSummaryForSearchVM.MobileSortParm = sortOrder == "Mobile" ? "mobile_desc" : "Mobile";
-        //    transactionSummaryForSearchVM.SoldSortParm = sortOrder == "Sold" ? "sold_desc" : "Sold";
-        //    transactionSummaryForSearchVM.ReceivedSortParm = sortOrder == "Received" ? "received_desc" : "Received";
-        //    transactionSummaryForSearchVM.TotalSortParm = sortOrder == "Total" ? "total_desc" : "Total";
-
-        //    transactionSummaryForSearchVM.PageSize = 2;
-
-        //    var customerTransactionsResult = await _uow.CustomerTransactions.GetAllCustomerTransactionAsync(transactionSummaryForSearchVM.PageNumber ?? 1, transactionSummaryForSearchVM.PageSize, transactionSummaryForSearchVM.SortOrder, transactionSummaryForSearchVM.FullNameFilter, transactionSummaryForSearchVM.MobileFilter, transactionSummaryForSearchVM.FromDateFilter, transactionSummaryForSearchVM.ToDateFilter);
-
-        //    transactionSummaryForSearchVM.CustomerTransaction = PaginatedList<CustomerTransactionSummaryForListViewModel>.CreateAsync(customerTransactionsResult.Data, customerTransactionsResult.TotalCount, transactionSummaryForSearchVM.PageNumber ?? 1, transactionSummaryForSearchVM.PageSize);
-
-        //    return View(transactionSummaryForSearchVM);
-        //}
-
-        public async Task<JsonResult> GetAllCustomerByFirstName(string term)
+        [HttpGet]
+        public async Task<IActionResult> GetCurrentYearDueSummaryByMonth()
         {
-            var customerNamesFromRepo = await _uow.Customers.GetAllCustomerByFirstNameAsync(term);
-            return Json(customerNamesFromRepo);
-        }
+            var customerTransactionsFromRepo = await _uow.CustomerTransactions.GetCurrentYearDueSummaryByMonthAsync();
+            var customerTransactionsToReturn = _mapper.Map<List<CustomerTransactionSummaryForListViewModel>>(customerTransactionsFromRepo);
 
-        public async Task<JsonResult> GetAllCustomerByLastName(string term)
-        {
-            var customerNamesFromRepo = await _uow.Customers.GetAllCustomerByLastNameAsync(term);
-            return Json(customerNamesFromRepo);
-        }
-
-        public async Task<JsonResult> GetAllCustomerByFullName(string term)
-        {
-            var customerNamesFromRepo = await _uow.Customers.GetAllCustomerByFullNameAsync(term);
-            return Json(customerNamesFromRepo);
-        }
-
-        public async Task<JsonResult> GetAllCustomerByMobile(string term)
-        {
-            var customerNamesFromRepo = await _uow.Customers.GetAllCustomerByMobileAsync(term);
-            return Json(customerNamesFromRepo);
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return Json(new
+            {
+                DueAmount = customerTransactionsToReturn.Select(c => c.TotalDueAmount)
+            });
         }
     }
 }

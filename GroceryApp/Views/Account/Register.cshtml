@@ -6,13 +6,17 @@
 
 @if (TempData["Message"] != null && TempData["Message"].ToString().Length > 0)
 {
-    <div class="alert alert-success alert-dismissible">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <strong>@TempData["Message"].ToString()</strong>
+    <div class="row" id="successMessageDiv">
+        <div class="col-md-6 offset-md-3">
+            <div class="alert alert-@TempData["Status"].ToString() alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong id="message">@TempData["Message"].ToString()</strong>
+            </div>
+        </div>
     </div>
 }
 
-<div class="row">    
+<div class="row">
     <div class="col-md-6 offset-md-3 mt-3">
         <div class="card">
             <div class="card-header">Register</div>
@@ -21,9 +25,9 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group">
                         <label asp-for="UserName" class="control-label"></label>
-                        <input asp-for="UserName" class="form-control" autofocus/>
+                        <input asp-for="UserName" class="form-control" autofocus />
                         <span asp-validation-for="UserName" class="text-danger"></span>
-                    </div>                    
+                    </div>
                     <div class="form-group">
                         <label asp-for="Email" class="control-label"></label>
                         <input asp-for="Email" class="form-control" />
@@ -41,16 +45,17 @@
                     </div>
                     <div class="form-group">
                         <input type="submit" value="Register" class="btn btn-primary" />
-                        <input type="reset" value="Clear" class="btn btn-dark">
+                        <input type="reset" value="Clear" id="clear" class="btn btn-dark">
                     </div>
                 </form>
             </div>
         </div>
-    </div>    
+    </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/add-register.js"></script>
 }
 
 

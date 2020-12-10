@@ -25,7 +25,9 @@ namespace GroceryApp.Data
 
         Task<List<Customer>> GetAllCustomerByLastNameAsync(string name);
 
-        Task<List<Customer>> GetAllCustomerByMobileAsync(string name);
+        Task<List<Customer>> GetAllCustomerByMobileAsync(string mobile);
+
+        Task<List<Customer>> GetAllCustomerByEmailAsync(string email);
 
         Task<Customer> GetCustomerByMobileAsync(string mobile, int customerId);
 

@@ -1,33 +1,13 @@
 ﻿@{
-    ViewData["Title"] = "Customer Transactions";
+    ViewData["Title"] = "Customer Transaction Summary";
 }
 
-@if (TempData["Message"] != null && TempData["Message"].ToString().Length > 0)
-{
-    <div class="row" id="successMessageDiv">
-        <div class="col-md-10 offset-md-1">
-            <div class="alert alert-@TempData["Status"].ToString() alert-dismissible">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong id="message">@TempData["Message"].ToString()</strong>
-            </div>
-        </div>
-    </div>
-}
-
-<div id="deleteMessageDiv"></div>
+<div id="deleteMessage"></div>
 
 <div class="row">
     <div class="col-md-10 offset-md-1 mt-3 mb-3">
         <div class="panel panel-default">
             <div class="panel-body form-inline">
-                <div class="form-group mr-1">
-                    <label for="firstName" class="sr-only">First Name</label>
-                    <input name="firstName" id="firstName" class="form-control" placeholder="First Name" />
-                </div>
-                <div class="form-group mr-1">
-                    <label for="lastName" class="sr-only">Last Name</label>
-                    <input name="lastName" id="lastName" class="form-control" placeholder="Last Name" />
-                </div>
                 <div class="form-group mr-1">
                     <label for="fullName" class="sr-only">Full Name</label>
                     <input name="fullName" id="fullName" class="form-control" placeholder="Full Name" />
@@ -35,6 +15,10 @@
                 <div class="form-group mr-1">
                     <label for="mobile" class="sr-only">Mobile</label>
                     <input name="mobile" id="mobile" class="form-control" placeholder="Mobile" />
+                </div>
+                <div class="form-group mr-1">
+                    <label for="email" class="sr-only">Email</label>
+                    <input name="email" id="email" class="form-control" placeholder="Email" />
                 </div>
                 <div class="form-group mr-1">
                     <label for="fromDate" class="sr-only">From Date</label>
@@ -55,20 +39,11 @@
 
 <div class="row">
     <div class="col-md-10 offset-md-1 mt-3">
-        <table id="transaction-table" class="table table-bordered table-hover">
+        <table id="transaction-summary-table" class="table table-bordered table-hover">
             <thead>
                 <tr>
                     <th>
-                        Transaction Id
-                    </th>
-                    <th>
-                        Status
-                    </th>
-                    <th>
-                        First Name
-                    </th>
-                    <th>
-                        Last Name
+                        Customer Id
                     </th>
                     <th>
                         Full Name
@@ -77,15 +52,20 @@
                         Mobile
                     </th>
                     <th>
-                        Sold Amount
+                        Email
                     </th>
                     <th>
-                        Received Amount
+                        Total Sold Amount
                     </th>
                     <th>
-                        Date
+                        Total Received Amount
                     </th>
-                    <th>Action</th>
+                    <th>
+                        Total Due Amount
+                    </th>
+                    <th>
+                        Total Amount
+                    </th>
                 </tr>
             </thead>
         </table>
@@ -93,6 +73,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/transaction-index.js"></script>
-    <script src="~/js/delete-confirmation.js"></script>
+    <script src="~/js/transaction-summary.js"></script>
 }

@@ -4,7 +4,7 @@
 
 @if (TempData["Message"] != null && TempData["Message"].ToString().Length > 0)
 {
-    <div class="row">
+    <div class="row" id="successMessageDiv">
         <div class="col-md-10 offset-md-1">
             <div class="alert alert-@TempData["Status"].ToString() alert-dismissible">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -14,7 +14,7 @@
     </div>
 }
 
-<div id="deleteMessage"></div>
+<div id="deleteMessageDiv"></div>
 
 <div class="row">
     <div class="col-md-10 offset-md-1 mt-3 mb-3">
@@ -88,6 +88,6 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/customer-index.js"></script>
+    <script src="~/js/customer-index.js"></script>    
     <script src="~/js/delete-confirmation.js"></script>
 }

@@ -11,6 +11,7 @@ namespace GroceryApp.ViewModels
 
         [Display(Name = "Amount")]
         [Required]
+        [Range(0.1, Double.MaxValue, ErrorMessage = "The field {0} must be greater than {1}.")]
         public decimal Amount { get; set; }
 
         [DataType(DataType.Html)]

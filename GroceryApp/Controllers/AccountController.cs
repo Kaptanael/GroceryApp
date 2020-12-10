@@ -58,12 +58,15 @@ namespace GroceryApp.Controllers
                     if (result > 0)
                     {
                         TempData["Message"] = "Registered Successfully";
+                        TempData["Status"] = "success";
                     }
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex.StackTrace);
+                TempData["Message"] = "Failed to register";
+                TempData["Status"] = "danger";
             }
 
             return RedirectToAction(nameof(Register));
@@ -174,6 +177,7 @@ namespace GroceryApp.Controllers
                         if (result > 0)
                         {
                             TempData["Message"] = "Password changed Successfully";
+                            TempData["Status"] = "success";
                         }
                     }
                 }
@@ -181,6 +185,8 @@ namespace GroceryApp.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex.StackTrace);
+                TempData["Message"] = "Failed to change password";
+                TempData["Status"] = "danger";
             }
 
             return View();

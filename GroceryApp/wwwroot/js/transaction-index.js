@@ -1,5 +1,9 @@
 ﻿$(document).ready(function () {
 
+    setTimeout(function () {
+        $("#successMessageDiv").remove();
+    }, 3000);
+
     loadFullNameAutocomplete();
 
     loadFirstNameAutocomplete();
@@ -111,32 +115,47 @@ function deleteTransaction(transactionId) {
         cache: false,
         success: function (response) {
             if (response.type === 1) {
-                $("#deleteMessage").html(generateMessage('success'));
+                $("#deleteMessageDiv").html(generateMessage('success'));
                 $("#message").html(response.message);
                 $('#transaction-table').DataTable().draw();
+                setTimeout(function () {
+                    $("#deleteMessage").remove();
+                }, 3000);
             }
             else if (response.type === 2) {
-                $("#deleteMessage").html(generateMessage('info'));
+                $("#deleteMessageDiv").html(generateMessage('info'));
                 $("#message").html(response.message);
+                setTimeout(function () {
+                    $("#deleteMessage").remove();
+                }, 3000);
             }
             else if (response.type === 3) {
-                $("#deleteMessage").html(generateMessage('warning'));
+                $("#deleteMessageDiv").html(generateMessage('warning'));
                 $("#message").html(response.message);
+                setTimeout(function () {
+                    $("#deleteMessage").remove();
+                }, 3000);
             }
             else if (response.type === 4) {
-                $("#deleteMessage").html(generateMessage('danger'));
+                $("#deleteMessageDiv").html(generateMessage('danger'));
                 $("#message").html(response.message);
+                setTimeout(function () {
+                    $("#deleteMessage").remove();
+                }, 3000);
             }
         },
         error: function (errorResponse) {
-            $("#deleteMessage").html(generateMessage('danger'));
+            $("#deleteMessageDiv").html(generateMessage('danger'));
             $("#message").html(errorResponse);
+            setTimeout(function () {
+                $("#deleteMessage").remove();
+            }, 3000);
         }
     });
 }
 
 function generateMessage(className) {
-    var html = '<div class="row">'
+    var html = '<div id="deleteMessage" class="row">'
         + '<div class="col-md-10 offset-md-1">'
         + '<div class="alert alert-' + className + ' alert-dismissible">'
         + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'

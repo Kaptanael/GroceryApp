@@ -1,4 +1,9 @@
 ﻿(function ($) {
+
+    setTimeout(function () {
+        $("#successMessageDiv").remove();
+    }, 3000);
+
     function AddEditTransaction() {
         var $this = this;
 
@@ -16,8 +21,14 @@
             initialize();
         };
     }
+
     $(function () {
         var self = new AddEditTransaction();
         self.init();
     });
+
+    jQuery.validator.setDefaults({
+        ignore: ":hidden, [contenteditable='true']:not([name])"
+    });    
+
 }(jQuery));

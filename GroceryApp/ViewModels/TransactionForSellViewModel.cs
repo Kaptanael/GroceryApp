@@ -12,7 +12,8 @@ namespace GroceryApp.ViewModels
         public int CustomerTransactionId { get; set; }
 
         [Display(Name = "Amount")]
-        [Required]        
+        [Required]
+        [Range(0.1, Double.MaxValue, ErrorMessage = "The field {0} must be greater than {1}.")]
         public decimal SoldAmount { get; set; }
         
         [DataType(DataType.Html)]

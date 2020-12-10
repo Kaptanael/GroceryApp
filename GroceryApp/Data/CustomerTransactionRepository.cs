@@ -8,6 +8,7 @@ using System;
 using GroceryApp.Common;
 using GroceryApp.Extensions;
 using GroceryApp.Models.AuxiliaryModels;
+using System.Globalization;
 
 namespace GroceryApp.Data
 {
@@ -174,7 +175,7 @@ namespace GroceryApp.Data
             if (!string.IsNullOrEmpty(mobile))
             {
                 customerTransactions = customerTransactions.Where(ct => ct.Customer.Mobile.Contains(mobile));
-            }
+            }            
             if (fromDate != null && toDate != null)
             {
                 customerTransactions = customerTransactions.Where(ct => ct.TransactionDate >= fromDate && ct.TransactionDate <= toDate);
@@ -234,7 +235,7 @@ namespace GroceryApp.Data
             return new DataResult<List<CustomerTransactionSummaryForListViewModel>>(filteredCustomerTransactions.ToList(), count);
         }
 
-        public async Task<DataResult<List<CustomerTransactionSummaryForListViewModel>>> GetAllCustomerTransactionSummaryAsync(int start, int length, string sortColumnName, bool orderAscendingDirection, string fullName, string mobile, DateTime? fromDate, DateTime? toDate)
+        public async Task<DataResult<List<CustomerTransactionSummaryForListViewModel>>> GetAllCustomerTransactionSummaryAsync(int start, int length, string sortColumnName, bool orderAscendingDirection, string fullName, string mobile, string email,DateTime? fromDate, DateTime? toDate)
         {
             int coustomerTransactionsFilteredCount = 0;
             int coustomerTransactionsTotalCount = 0;
@@ -260,6 +261,10 @@ namespace GroceryApp.Data
             {
                 customerTransactions = customerTransactions.Where(ct => ct.Mobile.Contains(mobile));
             }
+            if (!string.IsNullOrEmpty(email))
+            {
+                customerTransactions = customerTransactions.Where(ct => ct.Email.Contains(email));
+            }
             if (fromDate != null && toDate != null)
             {
                 customerTransactions = customerTransactions.Where(ct => ct.TransactionDate >= fromDate && ct.TransactionDate <= toDate);
@@ -274,6 +279,7 @@ namespace GroceryApp.Data
                     Email = group.Key.Email,
                     TotalSellAmount = group.Sum(s => s.SoldAmount),
                     TotalReceiveAmount = group.Sum(s => s.ReceivedAmount),
+                    TotalDueAmount = group.Sum(s => s.SoldAmount) - group.Sum(s => s.ReceivedAmount),
                     TotalAmount = group.Sum(s => s.SoldAmount) - group.Sum(s => s.ReceivedAmount)
                 });
 
@@ -295,6 +301,30 @@ namespace GroceryApp.Data
             }
 
             return new DataResult<List<CustomerTransactionSummaryForListViewModel>>(await customerTransactionsFilterData.ToListAsync(), coustomerTransactionsTotalCount, coustomerTransactionsFilteredCount);
+        }
+
+        public async Task<List<CustomerTransactionSummaryForListViewModel>> GetCurrentYearDueSummaryByMonthAsync()
+        {
+            var transactionsGroupByMonth = ApplicationDbContext.CustomerTransactions.GroupBy(g => new { g.TransactionDate.Month })
+                .Select(group => new CustomerTransactionSummaryForListViewModel
+                {
+                    TotalDueAmount = group.Sum(s => s.SoldAmount) - group.Sum(s => s.ReceivedAmount)
+                });
+
+            return await transactionsGroupByMonth.ToListAsync();
+        }
+
+        public async Task<List<CustomerTransactionSummaryForListViewModel>> GetCurrentYearSaleSummaryByMonthAsync() 
+        {
+            var transactionsGroupByMonth = ApplicationDbContext.CustomerTransactions.GroupBy(g => new { g.TransactionDate.Month })
+                .Select(group => new CustomerTransactionSummaryForListViewModel
+                {                    
+                    TotalSellAmount = group.Sum(s => s.SoldAmount),
+                    TotalReceiveAmount = group.Sum(s => s.ReceivedAmount),
+                    TotalAmount = group.Sum(s => s.SoldAmount) - group.Sum(s => s.ReceivedAmount)                    
+                });
+
+            return await transactionsGroupByMonth.ToListAsync();
         }
     }
 }

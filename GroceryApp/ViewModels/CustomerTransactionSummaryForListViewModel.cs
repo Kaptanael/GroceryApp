@@ -15,5 +15,7 @@ namespace GroceryApp.ViewModels
         public decimal TotalSellAmount { get; set; }
         public decimal TotalReceiveAmount { get; set; }
         public decimal TotalAmount { get; set; }
+        public decimal TotalDueAmount { get; set; }
+        public string Date { get; set; }
     }
 }

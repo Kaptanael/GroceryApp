@@ -217,6 +217,14 @@ namespace GroceryApp.Data
             return await customers.ToListAsync();
         }
 
+        public async Task<List<Customer>> GetAllCustomerByEmailAsync(string email)
+        {
+            var customers = ApplicationDbContext.Customers.AsNoTracking()
+             .Where(c => c.Email.ToLower().StartsWith(email.ToLower()));
+
+            return await customers.ToListAsync();
+        }
+
         public async Task<Customer> GetCustomerByMobileAsync(string mobile, int customerId)
         {
             Customer customer;

@@ -1,7 +1,7 @@
 ﻿@model GroceryApp.ViewModels.TransactionForReceiveViewModel
 
 @{
-    ViewData["Title"] = "Add Edit Receive";
+    ViewData["Title"] = "Add Edit Deposit";
 }
 
 @if (TempData["Message"] != null && TempData["Message"].ToString().Length > 0)
@@ -19,7 +19,7 @@
 <div class="row">
     <div class="col-md-6 offset-md-3 mt-3">
         <div class="card">
-            <div class="card-header">Receive</div>
+            <div class="card-header">Deposit</div>
             <div class="card-body primary">
                 <form asp-action="AddEditReceive">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>

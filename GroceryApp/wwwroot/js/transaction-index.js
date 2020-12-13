@@ -43,8 +43,8 @@
             { data: 'lastName', name: 'LastName', orderable: true },
             { data: 'fullName', name: 'FullName', orderable: true },
             { data: 'mobile', name: 'Mobile', orderable: true },
-            { data: 'soldAmount', name: 'SoldAmount', orderable: true },
-            { data: 'receivedAmount', name: 'ReceivedAmount', orderable: true },
+            { data: 'soldAmount', name: 'SoldAmount', orderable: true, className:'text-right' },
+            { data: 'receivedAmount', name: 'ReceivedAmount', orderable: true, className: 'text-right'},
             {
                 data: 'transactionDate', name: 'TransactionDate', orderable: true,
                 render: function (value) {

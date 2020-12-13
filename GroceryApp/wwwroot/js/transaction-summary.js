@@ -33,10 +33,10 @@
             { data: 'fullName', name: 'FullName', orderable: true },
             { data: 'mobile', name: 'Mobile', orderable: true },
             { data: 'email', name: 'Email', orderable: true },
-            { data: 'totalSellAmount', name: 'TotalSellAmount', orderable: true },
-            { data: 'totalReceiveAmount', name: 'TotalReceiveAmount', orderable: true },
-            { data: 'totalDueAmount', name: 'TotalDueAmount', orderable: true },
-            { data: 'totalAmount', name: 'TotalAmount', orderable: true }
+            { data: 'totalSellAmount', name: 'TotalSellAmount', orderable: true, className: 'text-right' },
+            { data: 'totalReceiveAmount', name: 'TotalReceiveAmount', orderable: true, className: 'text-right' },
+            { data: 'totalDueAmount', name: 'TotalDueAmount', orderable: true, className: 'text-right'},
+            { data: 'totalAmount', name: 'TotalAmount', orderable: true, className: 'text-right' }
         ]
     });
 

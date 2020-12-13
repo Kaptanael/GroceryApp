@@ -52,7 +52,7 @@
                             <i class="glyphicon glyphicon-pencil"></i>  Back
                         </a>
                         <input type="submit" value="Save" name="save" class="btn btn-primary" />
-                        @*<input type="reset" id="clear" value="Clear" class="btn btn-dark">*@
+                        <input type="button" id="clear" value="Clear" class="btn btn-dark">
                     </div>
                 </form>
             </div>
@@ -63,7 +63,7 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/js/addedit-receive.js"></script>
+    <script src="~/js/addedit-transaction.js"></script>
 }
 
 
